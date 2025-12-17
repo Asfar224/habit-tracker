@@ -11,8 +11,8 @@ import {
   BarChart3,
   Settings
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useHabits } from '../../contexts/HabitContext';
+import { useAuth } from '../../../backend/contexts/AuthContext';
+import { useHabits } from '../../../backend/contexts/HabitContext';
 import HabitCard from '../habits/HabitCard';
 import AddHabitModal from '../habits/AddHabitModal';
 import EditHabitModal from '../habits/EditHabitModal';

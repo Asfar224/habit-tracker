@@ -14,8 +14,8 @@
     "firebase": "^10.7.1",
     "react-router-dom": "^6.20.1",
     "recharts": "^2.8.0",
-    "framer-motion": "^10.16.5",
-    "lucide-react": "^0.294.0",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.400.0",
     "date-fns": "^2.30.0"
   },
   "scripts": {

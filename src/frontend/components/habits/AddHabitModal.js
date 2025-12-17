@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Target, Clock, Save } from 'lucide-react';
-import { useHabits } from '../../contexts/HabitContext';
+import { X, Plus, Target, Clock, Calendar } from 'lucide-react';
+import { useHabits } from '../../../backend/contexts/HabitContext';
 
-const EditHabitModal = ({ isOpen, onClose, habit }) => {
+const AddHabitModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -13,7 +13,7 @@ const EditHabitModal = ({ isOpen, onClose, habit }) => {
     color: '#3B82F6'
   });
   const [loading, setLoading] = useState(false);
-  const { updateHabit } = useHabits();
+  const { addHabit } = useHabits();
 
   const categories = [
     { value: 'health', label: 'Health & Fitness', icon: '💪' },
@@ -29,19 +29,6 @@ const EditHabitModal = ({ isOpen, onClose, habit }) => {
     '#3B82F6', '#EF4444', '#10B981', '#F59E0B', 
     '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'
   ];
-
-  useEffect(() => {
-    if (habit) {
-      setFormData({
-        name: habit.name || '',
-        description: habit.description || '',
-        category: habit.category || 'health',
-        targetDays: habit.targetDays || 7,
-        reminderTime: habit.reminderTime || '',
-        color: habit.color || '#3B82F6'
-      });
-    }
-  }, [habit]);
 
   const handleChange = (e) => {
     setFormData({
@@ -59,22 +46,32 @@ const EditHabitModal = ({ isOpen, onClose, habit }) => {
 
     try {
       setLoading(true);
-      await updateHabit(habit.id, {
+      await addHabit({
         name: formData.name.trim(),
         description: formData.description.trim(),
         category: formData.category,
         targetDays: parseInt(formData.targetDays),
         reminderTime: formData.reminderTime,
-        color: formData.color
+        color: formData.color,
+        isActive: true
+      });
+      
+      setFormData({
+        name: '',
+        description: '',
+        category: 'health',
+        targetDays: 7,
+        reminderTime: '',
+        color: '#3B82F6'
       });
       onClose();
     } catch (error) {
-      console.error('Error updating habit:', error);
+      console.error('Error adding habit:', error);
     }
     setLoading(false);
   };
 
-  if (!isOpen || !habit) return null;
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -95,13 +92,10 @@ const EditHabitModal = ({ isOpen, onClose, habit }) => {
       >
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: habit.color }}
-              >
-                <Target className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <Plus className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">Edit Habit</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Add New Habit</h2>
             </div>
             <button
               onClick={onClose}
@@ -237,18 +231,15 @@ const EditHabitModal = ({ isOpen, onClose, habit }) => {
               <button
                 type="submit"
                 disabled={loading || !formData.name.trim()}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium shadow-lg flex items-center justify-center space-x-2"
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium shadow-lg"
               >
                 {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>Saving...</span>
-                  </>
+                  <div className="flex items-center justify-center">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                    Adding...
+                  </div>
                 ) : (
-                  <>
-                    <Save className="w-4 h-4" />
-                    <span>Save Changes</span>
-                  </>
+                  'Add Habit'
                 )}
               </button>
             </div>
@@ -259,4 +250,4 @@ const EditHabitModal = ({ isOpen, onClose, habit }) => {
   );
 };
 
-export default EditHabitModal;
+export default AddHabitModal;

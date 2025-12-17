@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../../backend/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Mail, Lock, User, Sparkles } from 'lucide-react';
 
@@ -46,7 +46,7 @@ const Signup = () => {
     try {
       setError('');
       setLoading(true);
-      await signup(formData.email, formData.password);
+      await signup(formData.email, formData.password, formData.name);
       navigate('/dashboard');
     } catch (error) {
       setError('Failed to create account. Email might already be in use.');

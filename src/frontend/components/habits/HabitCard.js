@@ -12,7 +12,7 @@ import {
   Trophy,
   Star
 } from 'lucide-react';
-import { useHabits } from '../../contexts/HabitContext';
+import { useHabits } from '../../../backend/contexts/HabitContext';
 import { format, isToday } from 'date-fns';
 
 const HabitCard = ({ habit, onEdit, onDelete }) => {
