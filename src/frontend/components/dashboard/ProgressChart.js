@@ -83,12 +83,16 @@ const ProgressChart = ({ habits }) => {
         const totalHabits = habits.length;
         weekTotal += totalHabits;
         
-        habits.forEach(habit => {
+        // Count completions for this day
+        let dayCompletions = 0;
+        for (let k = 0; k < habits.length; k++) {
+          const habit = habits[k];
           const hasCompletion = habit.completions?.some(completion => 
             completion.date === dateStr
           );
-          if (hasCompletion) weekCompletions++;
-        });
+          if (hasCompletion) dayCompletions++;
+        }
+        weekCompletions += dayCompletions;
       }
       
       weeks.push({
