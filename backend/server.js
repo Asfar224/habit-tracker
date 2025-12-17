@@ -50,10 +50,12 @@ app.get('/', (req, res) => {
   res.json({ message: 'Habit Tracker API Server' });
 });
 
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-});
+// Start server only if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
 

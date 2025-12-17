@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: habit-tracker-frontend
+  labels:
+    app: habit-tracker-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: habit-tracker-frontend
+  template:
+    metadata:
+      labels:
+        app: habit-tracker-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: IMAGE_TAG
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://habit-tracker-backend:5000/api"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: habit-tracker-backend
+  labels:
+    app: habit-tracker-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: habit-tracker-backend
+  template:
+    metadata:
+      labels:
+        app: habit-tracker-backend
+    spec:
+      containers:
+      - name: backend
+        image: IMAGE_TAG
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PORT
+          value: "5000"
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: habit-tracker-secrets
+              key: db-host
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: habit-tracker-secrets
+              key: db-name
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: habit-tracker-secrets
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: habit-tracker-secrets
+              key: db-password
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: habit-tracker-secrets
+              key: jwt-secret
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: habit-tracker-frontend
+spec:
+  selector:
+    app: habit-tracker-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: habit-tracker-backend
+spec:
+  selector:
+    app: habit-tracker-backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
+
+
