@@ -129,9 +129,11 @@ export const completionsAPI = {
   },
 };
 
-export default {
+const api = {
   auth: authAPI,
   habits: habitsAPI,
   completions: completionsAPI,
 };
+
+export default api;
 

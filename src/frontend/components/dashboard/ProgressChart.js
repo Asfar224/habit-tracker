@@ -17,13 +17,10 @@ import {
 } from 'recharts';
 import { 
   BarChart3, 
-  TrendingUp, 
   PieChart as PieChartIcon,
-  Calendar,
-  Target,
-  Flame
+  TrendingUp
 } from 'lucide-react';
-import { format, subDays, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
+import { format, subDays } from 'date-fns';
 
 const ProgressChart = ({ habits }) => {
   const [chartType, setChartType] = useState('line');
@@ -74,7 +71,6 @@ const ProgressChart = ({ habits }) => {
     const today = new Date();
     
     for (let i = 3; i >= 0; i--) {
-      const weekStart = subDays(today, (i * 7) + 6);
       const weekEnd = subDays(today, i * 7);
       
       let weekCompletions = 0;
@@ -84,8 +80,10 @@ const ProgressChart = ({ habits }) => {
         const date = subDays(weekEnd, j);
         const dateStr = format(date, 'yyyy-MM-dd');
         
+        const totalHabits = habits.length;
+        weekTotal += totalHabits;
+        
         habits.forEach(habit => {
-          weekTotal++;
           const hasCompletion = habit.completions?.some(completion => 
             completion.date === dateStr
           );

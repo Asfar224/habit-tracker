@@ -4,9 +4,7 @@ import {
   Target, 
   CheckCircle, 
   Flame, 
-  Trophy,
-  TrendingUp,
-  Calendar
+  Trophy
 } from 'lucide-react';
 
 const StatsOverview = ({ 

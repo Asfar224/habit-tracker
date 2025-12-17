@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Check, 
-  X, 
   Edit3, 
   Trash2, 
   Target, 
@@ -13,7 +12,6 @@ import {
   Star
 } from 'lucide-react';
 import { useHabits } from '../../../backend/contexts/HabitContext';
-import { format, isToday } from 'date-fns';
 
 const HabitCard = ({ habit, onEdit, onDelete }) => {
   const [showMenu, setShowMenu] = useState(false);

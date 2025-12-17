@@ -168,6 +168,7 @@ export const HabitProvider = ({ children }) => {
     ]).finally(() => {
       setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const value = {

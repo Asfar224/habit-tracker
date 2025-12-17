@@ -17,6 +17,7 @@ jobs:
   build-frontend:
     name: Build & Test Frontend
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     
     steps:
       - name: Checkout code
@@ -28,15 +29,28 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
+      - name: Get npm cache directory
+        id: npm-cache
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install frontend dependencies
         run: |
           cd ${{ github.workspace }}
-          npm install --legacy-peer-deps
+          npm ci --legacy-peer-deps --prefer-offline --no-audit
 
       - name: Run frontend tests
         run: |
           cd ${{ github.workspace }}
-          npm test -- --watchAll=false --coverage --ci
+          npm test -- --watchAll=false --ci --maxWorkers=2
 
       - name: Build frontend
         run: |
@@ -54,6 +68,7 @@ jobs:
   build-backend:
     name: Build & Test Backend
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     services:
       postgres:
@@ -64,9 +79,9 @@ jobs:
           POSTGRES_PASSWORD: postgres_test
         options: >-
           --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 3
         ports:
           - 5432:5432
 
@@ -84,7 +99,7 @@ jobs:
       - name: Install backend dependencies
         run: |
           cd backend
-          npm install
+          npm ci --prefer-offline --no-audit
 
       - name: Run backend tests
         env:
@@ -97,7 +112,7 @@ jobs:
           NODE_ENV: test
         run: |
           cd backend
-          npm test
+          npm test -- --maxWorkers=2
 
       - name: Upload backend test results
         if: always()

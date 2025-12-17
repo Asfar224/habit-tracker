@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Target, Clock, Calendar } from 'lucide-react';
+import { X, Plus, Target, Clock } from 'lucide-react';
 import { useHabits } from '../../../backend/contexts/HabitContext';
 
 const AddHabitModal = ({ isOpen, onClose }) => {

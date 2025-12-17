@@ -3,13 +3,9 @@ import { motion } from 'framer-motion';
 import { 
   Plus, 
   LogOut, 
-  Calendar, 
-  TrendingUp, 
   Trophy, 
   Target,
-  Flame,
-  BarChart3,
-  Settings
+  BarChart3
 } from 'lucide-react';
 import { useAuth } from '../../../backend/contexts/AuthContext';
 import { useHabits } from '../../../backend/contexts/HabitContext';
